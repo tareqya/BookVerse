@@ -1,0 +1,18 @@
+<resources xmlns:tools="http://schemas.android.com/tools">
+    <!-- Base application theme. -->
+    <style name="Base.Theme.BlogsApp" parent="Theme.Material3.DayNight.NoActionBar">
+
+        <item name="colorPrimary">@color/blue</item>
+        <item name="colorOnPrimary">@color/white</item>
+
+        <item name="colorSecondary">@color/blue</item>
+        <item name="colorOnSecondary">@color/white</item>
+
+        <!-- THIS CONTROLS ACTIVE TAB BACKGROUND -->
+        <item name="colorSecondaryContainer">@color/blue</item>
+        <item name="colorOnSecondaryContainer">@color/white</item>
+
+        <item name="android:statusBarColor">@color/blue</item>
+
+    </style>
+</resources>
