@@ -1,0 +1,52 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".main.HomeFragment">
+
+    <TextView
+        android:id="@+id/fragHome_TV_title"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Books"
+        android:padding="10dp"
+        android:textColor="@color/blue"
+        android:textSize="20sp"
+        />
+
+    <SearchView
+        android:id="@+id/fragHome_SV_search"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/fragHome_TV_title"
+        android:background="@color/white"
+        android:layout_marginHorizontal="20dp"
+        />
+    <LinearLayout
+        android:id="@+id/fragHome_LL_categoryWrapper"
+        android:layout_marginHorizontal="20dp"
+        android:layout_marginTop="10dp"
+        android:layout_below="@id/fragHome_SV_search"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        >
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="category"
+            />
+        <Spinner
+            android:id="@+id/fragHome_SP_category"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"/>
+    </LinearLayout>
+
+    <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/fragHome_RV_books"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_below="@id/fragHome_LL_categoryWrapper"
+        />
+
+</RelativeLayout>
