@@ -22,17 +22,20 @@ public class CartController {
     }
 
     public void fetchUserCart(String userId){
-        this.db.collection(CARTS).whereEqualTo("userId", userId).addSnapshotListener(new EventListener<QuerySnapshot>() {
-            @Override
-            public void onEvent(@Nullable QuerySnapshot value, @Nullable FirebaseFirestoreException error) {
-                if(value == null) return;
-                if(value.getDocuments().size() > 0){
-                    Cart cart = value.getDocuments().get(0).toObject(Cart.class);
-                    cart.setUid(value.getDocuments().get(0).getId());
-                    cartCallBack.onFetchCartComplete(cart);
-                }
-            }
-        });
+        this.db.collection(CARTS)
+                .whereEqualTo("userId", userId)
+                .addSnapshotListener((value, error) -> {
+
+                    if (value == null) return;
+
+                    if (value.getDocuments().size() > 0) {
+                        Cart cart = value.getDocuments().get(0).toObject(Cart.class);
+                        cart.setUid(value.getDocuments().get(0).getId());
+                        cartCallBack.onFetchCartComplete(cart);
+                    } else {
+                        cartCallBack.onFetchCartComplete(null);
+                    }
+                });
     }
 
     public void updateCart(Cart cart){
@@ -43,4 +46,7 @@ public class CartController {
         this.db.collection(CARTS).document().set(cart);
     }
 
+    public void removeCart(String cartId){
+        this.db.collection(CARTS).document(cartId).delete();
+    }
 }

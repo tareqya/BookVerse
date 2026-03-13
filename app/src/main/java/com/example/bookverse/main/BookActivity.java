@@ -23,6 +23,7 @@ import com.example.bookverse.database.Book;
 import com.example.bookverse.database.BookCart;
 import com.example.bookverse.database.Cart;
 import com.example.bookverse.database.CartController;
+import com.google.android.material.progressindicator.CircularProgressIndicator;
 
 public class BookActivity extends AppCompatActivity {
     private Book book;
@@ -34,7 +35,8 @@ public class BookActivity extends AppCompatActivity {
     private CartController cartController;
     private AccountController accountController;
     private Cart cart;
-    private boolean enable;
+    private boolean enable = false;
+    private CircularProgressIndicator bookActivity_PB_loading;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -59,11 +61,10 @@ public class BookActivity extends AppCompatActivity {
         bookActivity_IV_bookImage = findViewById(R.id.bookActivity_IV_bookImage);
         bookActivity_TV_bookDescription = findViewById(R.id.bookActivity_TV_bookDescription);
         bookActivity_BTN_AddToCart = findViewById(R.id.bookActivity_BTN_AddToCart);
-
+        bookActivity_PB_loading = findViewById(R.id.bookActivity_PB_loading);
     }
 
     private void mainFunction() {
-        enable = false;
         cart = new Cart();
         accountController = new AccountController();
         cartController = new CartController();
@@ -72,6 +73,8 @@ public class BookActivity extends AppCompatActivity {
             public void onFetchCartComplete(Cart data) {
                 cart = data;
                 enable = true;
+                bookActivity_PB_loading.setVisibility(View.INVISIBLE);
+                Toast.makeText(BookActivity.this, "Cart fetched", Toast.LENGTH_SHORT).show();
             }
         });
         String uid = accountController.getCurrentUser().getUid();
@@ -87,10 +90,11 @@ public class BookActivity extends AppCompatActivity {
             @Override
             public void onClick(View view) {
                 if(!enable){
-                    Toast.makeText(BookActivity.this, "Please wait, try after 5 sec", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(BookActivity.this, "Please wait...", Toast.LENGTH_SHORT).show();
                     return;
                 }
-
+                enable = false;
+                bookActivity_PB_loading.setVisibility(View.VISIBLE);
                 for(int i = 0 ; i < cart.getBooks().size(); i++){
                     BookCart bookCart = cart.getBooks().get(i);
                     if(book.getUid().equals(bookCart.getBookId())){

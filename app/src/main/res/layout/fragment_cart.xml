@@ -1,14 +1,46 @@
 <?xml version="1.0" encoding="utf-8"?>
-<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     tools:context=".main.CartFragment">
-
-    <!-- TODO: Update blank fragment layout -->
     <TextView
+        android:id="@+id/fragCart_TV_title"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="My Cart"
+        android:padding="10dp"
+        android:textColor="@color/blue"
+        android:textSize="20sp"
+        />
+
+    <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/fragCart_RV_books"
+        android:layout_below="@id/fragCart_TV_title"
+        android:layout_above="@id/fragCart_TV_totalPrice"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:text="@string/hello_blank_fragment" />
-
-</FrameLayout>
+        android:layout_marginTop="10dp"
+        />
+    <TextView
+        android:layout_marginTop="10dp"
+        android:id="@+id/fragCart_TV_totalPrice"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text=""
+        android:padding="10dp"
+        android:textColor="@color/orange"
+        android:textSize="20sp"
+        android:layout_marginHorizontal="20dp"
+        android:layout_above="@id/fragCart_BTN_orderNow"
+        />
+    <Button
+        android:id="@+id/fragCart_BTN_orderNow"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true"
+        android:layout_centerHorizontal="true"
+        android:layout_marginBottom="20dp"
+        android:text="Order Now"
+        />
+</RelativeLayout>

@@ -12,21 +12,27 @@ import androidx.recyclerview.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.AdapterView;
+import android.widget.ArrayAdapter;
 import android.widget.SearchView;
 import android.widget.Spinner;
 
 import com.example.bookverse.R;
 import com.example.bookverse.adapter.BookAdapter;
 import com.example.bookverse.callback.BookCallBack;
+import com.example.bookverse.callback.CartCallBack;
+import com.example.bookverse.database.AccountController;
 import com.example.bookverse.database.Book;
 import com.example.bookverse.database.BookController;
+import com.example.bookverse.database.Cart;
+import com.example.bookverse.database.CartController;
 
 import java.util.ArrayList;
 
 
 public class HomeFragment extends Fragment {
     public static final String BOOK_KEY = "book";
-    public static final String [] CATEGORIES = {};
+    public static final String [] CATEGORIES = {"All", "Science", "History", "Kids", "Novels", "Psychology", "Environment/Nature", "Learning Languages"};
     private Context context;
     private RecyclerView fragHome_RV_books;
     private SearchView fragHome_SV_search;
@@ -53,6 +59,13 @@ public class HomeFragment extends Fragment {
         fragHome_SP_category = view.findViewById(R.id.fragHome_SP_category);
     }
     private void mainFunction() {
+        ArrayAdapter<String> adapter = new ArrayAdapter<>(
+                context,
+                android.R.layout.simple_spinner_item,
+                CATEGORIES
+        );
+        adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+        fragHome_SP_category.setAdapter(adapter);
         allBooks = new ArrayList<>();
         bookController = new BookController();
         bookController.setBookCallBack(new BookCallBack() {
@@ -84,6 +97,29 @@ public class HomeFragment extends Fragment {
             @Override
             public boolean onQueryTextSubmit(String s) {
                 return false;
+            }
+        });
+
+        fragHome_SP_category.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+            @Override
+            public void onItemSelected(AdapterView<?> adapterView, View view, int index, long l) {
+                ArrayList<Book> books = new ArrayList<>();
+                String selectedCategory = CATEGORIES[index];
+                if(selectedCategory.equalsIgnoreCase("all")){
+                    displayBooks(allBooks);
+                    return;
+                }
+                for(int i = 0 ; i < allBooks.size(); i++){
+                    if(allBooks.get(i).getCategory().equalsIgnoreCase(selectedCategory)){
+                        books.add(allBooks.get(i));
+                    }
+                }
+                displayBooks(books);
+            }
+
+            @Override
+            public void onNothingSelected(AdapterView<?> adapterView) {
+
             }
         });
     }

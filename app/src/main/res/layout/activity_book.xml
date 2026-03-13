@@ -56,4 +56,14 @@
         android:layout_marginTop="10dp"
         android:text="Add To Cart"
         />
+    <com.google.android.material.progressindicator.CircularProgressIndicator
+        android:id="@+id/bookActivity_PB_loading"
+        android:layout_marginTop="10dp"
+        android:layout_below="@+id/bookActivity_BTN_AddToCart"
+        android:layout_centerHorizontal="true"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:indeterminate="true"
+        android:visibility="visible"
+        />
 </RelativeLayout>
