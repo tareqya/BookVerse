@@ -1,8 +1,11 @@
 package com.example.bookverse.database;
 
+import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 
 import com.example.bookverse.callback.OrderCallBack;
+import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.Task;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.EventListener;
 import com.google.firebase.firestore.FirebaseFirestore;
@@ -24,7 +27,12 @@ public class OrderController {
     }
 
     public void addOrder(Order order){
-        db.collection(ORDERS).document().set(order);
+        db.collection(ORDERS).document().set(order).addOnCompleteListener(new OnCompleteListener<Void>() {
+            @Override
+            public void onComplete(@NonNull Task<Void> task) {
+                orderCallBack.onAddOrderComplete(task);
+            }
+        });
     }
 
     public void fetchUserOrders(String userId){

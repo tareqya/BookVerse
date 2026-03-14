@@ -1,8 +1,11 @@
 package com.example.bookverse.database;
 
+import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 
 import com.example.bookverse.callback.CartCallBack;
+import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.Task;
 import com.google.firebase.firestore.EventListener;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.FirebaseFirestoreException;
@@ -47,6 +50,11 @@ public class CartController {
     }
 
     public void removeCart(String cartId){
-        this.db.collection(CARTS).document(cartId).delete();
+        this.db.collection(CARTS).document(cartId).delete().addOnCompleteListener(new OnCompleteListener<Void>() {
+            @Override
+            public void onComplete(@NonNull Task<Void> task) {
+                cartCallBack.onCartRemoveComplete(task);
+            }
+        });
     }
 }

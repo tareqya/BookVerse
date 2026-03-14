@@ -14,6 +14,7 @@ import androidx.core.view.WindowInsetsCompat;
 
 import com.example.bookverse.R;
 import com.example.bookverse.callback.AccountCallBack;
+import com.example.bookverse.database.Account;
 import com.example.bookverse.database.AccountController;
 import com.example.bookverse.main.MainActivity;
 import com.google.android.gms.tasks.Task;
@@ -78,6 +79,11 @@ public class LoginActivity extends AppCompatActivity {
                     String err = task.getException().getMessage().toString();
                     Toast.makeText(LoginActivity.this, "Error: " + err, Toast.LENGTH_SHORT).show();
                 }
+            }
+
+            @Override
+            public void onFetchAccountInfoComplete(Account account) {
+
             }
         });
 

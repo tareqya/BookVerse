@@ -23,6 +23,7 @@ import com.example.bookverse.database.Book;
 import com.example.bookverse.database.BookCart;
 import com.example.bookverse.database.Cart;
 import com.example.bookverse.database.CartController;
+import com.google.android.gms.tasks.Task;
 import com.google.android.material.progressindicator.CircularProgressIndicator;
 
 public class BookActivity extends AppCompatActivity {
@@ -71,10 +72,20 @@ public class BookActivity extends AppCompatActivity {
         cartController.setCartCallBack(new CartCallBack() {
             @Override
             public void onFetchCartComplete(Cart data) {
-                cart = data;
+                if(data == null){
+                    cart = new Cart();
+                }else{
+                    cart = data;
+                }
+
                 enable = true;
                 bookActivity_PB_loading.setVisibility(View.INVISIBLE);
-                Toast.makeText(BookActivity.this, "Cart fetched", Toast.LENGTH_SHORT).show();
+                Toast.makeText(BookActivity.this, "Cart Ready", Toast.LENGTH_SHORT).show();
+            }
+
+            @Override
+            public void onCartRemoveComplete(Task<Void> task) {
+
             }
         });
         String uid = accountController.getCurrentUser().getUid();

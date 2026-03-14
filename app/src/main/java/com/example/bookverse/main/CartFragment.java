@@ -20,6 +20,7 @@ import com.example.bookverse.R;
 import com.example.bookverse.adapter.BookAdapter;
 import com.example.bookverse.adapter.CartAdapter;
 import com.example.bookverse.callback.CartCallBack;
+import com.example.bookverse.callback.OrderCallBack;
 import com.example.bookverse.database.AccountController;
 import com.example.bookverse.database.Book;
 import com.example.bookverse.database.BookCart;
@@ -27,6 +28,7 @@ import com.example.bookverse.database.Cart;
 import com.example.bookverse.database.CartController;
 import com.example.bookverse.database.Order;
 import com.example.bookverse.database.OrderController;
+import com.google.android.gms.tasks.Task;
 
 import java.time.LocalDate;
 import java.util.ArrayList;
@@ -64,22 +66,55 @@ public class CartFragment extends Fragment {
 
     private void mainFunction() {
         orderController = new OrderController();
+        orderController.setOrderCallBack(new OrderCallBack() {
+            @Override
+            public void onFetchOrdersComplete(ArrayList<Order> orders) {
+
+            }
+
+            @Override
+            public void onAddOrderComplete(Task<Void> task) {
+                if(task.isSuccessful()){
+                    Toast.makeText(context, "Order created", Toast.LENGTH_SHORT).show();
+                }else{
+                    String err= task.getException().getMessage();
+                    Toast.makeText(context, err, Toast.LENGTH_SHORT).show();
+                }
+            }
+        });
         accountController = new AccountController();
         String uid = accountController.getCurrentUser().getUid();
         cartController = new CartController();
         cartController.setCartCallBack(new CartCallBack() {
             @Override
             public void onFetchCartComplete(Cart c) {
-                cart = c;
-                displayBooks(cart.getBooks());
+                if(c == null) {
+                    cart = new Cart();
+                }else{
+                    cart = c ;
+                }
                 if(!cart.getBooks().isEmpty()){
                     String totalPrice = "Total Price: " + String.valueOf(cart.getTotalPrice()) + " ₪";
                     fragCart_TV_totalPrice.setText(totalPrice);
+                }else {
+                    fragCart_TV_totalPrice.setText("");
+                }
+                displayBooks(cart.getBooks());
+            }
+
+            @Override
+            public void onCartRemoveComplete(Task<Void> task) {
+                if(task.isSuccessful()){
+                    Toast.makeText(context, "Cart Removed", Toast.LENGTH_SHORT).show();
+                    displayBooks(new ArrayList<>());
+                }else{
+                    String err = task.getException().getMessage();
+                    Toast.makeText(context, err, Toast.LENGTH_SHORT).show();
                 }
             }
         });
 
-//        cartController.fetchUserCart(uid);
+        cartController.fetchUserCart(uid);
 
 
         fragCart_BTN_orderNow.setOnClickListener(new View.OnClickListener() {
@@ -95,10 +130,10 @@ public class CartFragment extends Fragment {
                         .setStatus("Order Accepted")
                         .setOrderDate(new Date());
                 orderController.addOrder(order);
+                Toast.makeText(context, "Creating Order...", Toast.LENGTH_SHORT).show();
                 // clean the cart
                 cartController.removeCart(cart.getUid());
-                cartController.fetchUserCart(uid);
-                Toast.makeText(context, "Order Accepted", Toast.LENGTH_SHORT).show();
+
             }
         });
     }

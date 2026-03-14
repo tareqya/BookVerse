@@ -12,6 +12,9 @@
         android:supportsRtl="false"
         android:theme="@style/Base.Theme.BlogsApp">
         <activity
+            android:name=".main.EditProfileActivity"
+            android:exported="false" />
+        <activity
             android:name=".main.BookActivity"
             android:exported="false" />
         <activity
