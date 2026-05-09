@@ -9,12 +9,14 @@ import com.google.android.gms.tasks.Task;
 import com.google.firebase.firestore.EventListener;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.FirebaseFirestoreException;
+import com.google.firebase.firestore.ListenerRegistration;
 import com.google.firebase.firestore.QuerySnapshot;
 
 public class CartController {
     public static final String CARTS = "Carts";
     private FirebaseFirestore db;
     private CartCallBack cartCallBack;
+    private ListenerRegistration cartListenerRegistration;
 
     public CartController(){
         this.db = FirebaseFirestore.getInstance();
@@ -25,7 +27,8 @@ public class CartController {
     }
 
     public void fetchUserCart(String userId){
-        this.db.collection(CARTS)
+        removeListener();
+        cartListenerRegistration = this.db.collection(CARTS)
                 .whereEqualTo("userId", userId)
                 .addSnapshotListener((value, error) -> {
 
@@ -39,6 +42,13 @@ public class CartController {
                         cartCallBack.onFetchCartComplete(null);
                     }
                 });
+    }
+
+    public void removeListener(){
+        if(cartListenerRegistration != null){
+            cartListenerRegistration.remove();
+            cartListenerRegistration = null;
+        }
     }
 
     public void updateCart(Cart cart){

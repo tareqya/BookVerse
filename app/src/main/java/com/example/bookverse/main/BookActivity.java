@@ -104,8 +104,6 @@ public class BookActivity extends AppCompatActivity {
                     Toast.makeText(BookActivity.this, "Please wait...", Toast.LENGTH_SHORT).show();
                     return;
                 }
-                enable = false;
-                bookActivity_PB_loading.setVisibility(View.VISIBLE);
                 for(int i = 0 ; i < cart.getBooks().size(); i++){
                     BookCart bookCart = cart.getBooks().get(i);
                     if(book.getUid().equals(bookCart.getBookId())){
@@ -119,7 +117,6 @@ public class BookActivity extends AppCompatActivity {
                 BookCart bookCart = new BookCart();
                 bookCart.setUid(book.getUid());
                 bookCart.setName(book.getName());
-                bookCart.setImage(book.getImage());
                 bookCart.setCategory(book.getCategory());
                 bookCart.setPrice(book.getPrice());
                 bookCart.setDescription(book.getDescription());
@@ -133,4 +130,11 @@ public class BookActivity extends AppCompatActivity {
         });
     }
 
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        if (cartController != null) {
+            cartController.removeListener();
+        }
+    }
 }

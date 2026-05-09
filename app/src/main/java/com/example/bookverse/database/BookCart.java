@@ -1,5 +1,7 @@
 package com.example.bookverse.database;
 
+import com.google.firebase.firestore.Exclude;
+
 import java.io.Serializable;
 
 public class BookCart extends Book implements Serializable {
@@ -8,6 +10,12 @@ public class BookCart extends Book implements Serializable {
 
     public BookCart(){
 
+    }
+
+    @Exclude
+    @Override
+    public String getImage() {
+        return super.getImage();
     }
 
     public int getQuantity(){

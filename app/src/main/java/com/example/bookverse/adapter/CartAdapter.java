@@ -13,12 +13,19 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.bookverse.R;
 import com.example.bookverse.Utils;
+import com.example.bookverse.database.Book;
 import com.example.bookverse.database.BookCart;
+import com.google.firebase.firestore.FirebaseFirestore;
+
 import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.Map;
 
 public class CartAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder>{
     private ArrayList<BookCart> books;
     private Context context;
+    private Map<String, String> imageCache = new HashMap<>();
+
     public CartAdapter(Context context, ArrayList<BookCart> books){
         this.context = context;
         this.books = books;
@@ -38,9 +45,28 @@ public class CartAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder>{
         bookViewHolder.bookItem_TV_name.setText(book.getName());
         bookViewHolder.bookItem_TV_category.setText(book.getCategory());
         bookViewHolder.bookItem_TV_price.setText(book.getPrice() + " ₪");
-        Bitmap bitmap = Utils.base64ToBitmap(book.getImage());
-        bookViewHolder.bookItem_IV_bookImage.setImageBitmap(bitmap);
         bookViewHolder.bookItem_TV_quantity.setText("x" + book.getQuantity());
+
+        String bookId = book.getBookId();
+        if (imageCache.containsKey(bookId)) {
+            String cachedImage = imageCache.get(bookId);
+            if (cachedImage != null) {
+                Bitmap bitmap = Utils.base64ToBitmap(cachedImage);
+                bookViewHolder.bookItem_IV_bookImage.setImageBitmap(bitmap);
+            }
+        } else {
+            bookViewHolder.bookItem_IV_bookImage.setImageBitmap(null);
+            FirebaseFirestore.getInstance().collection("Books").document(bookId)
+                    .get()
+                    .addOnSuccessListener(documentSnapshot -> {
+                        Book fullBook = documentSnapshot.toObject(Book.class);
+                        if (fullBook != null && fullBook.getImage() != null) {
+                            imageCache.put(bookId, fullBook.getImage());
+                            Bitmap bitmap = Utils.base64ToBitmap(fullBook.getImage());
+                            bookViewHolder.bookItem_IV_bookImage.setImageBitmap(bitmap);
+                        }
+                    });
+        }
     }
 
     @Override
